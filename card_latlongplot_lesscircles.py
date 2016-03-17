@@ -1,0 +1,125 @@
+import csv
+import matplotlib.pyplot as plt
+import numpy as np
+from mpl_toolkits.basemap import Basemap
+import random
+
+#random.seed(120412)
+
+## read file
+cardfile = open("C:/Users/Kaiya/Dropbox/Docs for Brian/THESIS/Raw Specimen Data/specimen_latlongs_county.csv")
+# 
+reader = csv.DictReader(cardfile)
+
+## extract lat/long and ID
+latStrings = []
+longStrings = []
+ident = []
+desert = []
+county = []
+
+## extract the data
+for row in reader:
+    if row["latitude"] != "" :        
+        latStrings.append(row["latitude"])
+        longStrings.append(row["longitude"])
+        ident.append(row["Number"])
+        desert.append(row["GROUP"])
+        county.append(row["County"])
+
+cardfile.close()
+
+latNum = []
+longNum = []
+
+for lat in latStrings:
+    latNum.append(float(lat))
+    #print lat
+
+for lon in longStrings:
+    longNum.append(float(lon))
+    #print lon
+
+print min(latNum),max(latNum) #18.1685 34.6706
+print min(longNum),max(longNum) #-111.9397 -95.925472
+
+## x = long, y = lat, c = county
+xson = []
+yson = []
+cson = []
+
+xchi = []
+ychi = []
+cchi = []
+
+xout = []
+yout = []
+cout = []
+
+xpyr = []
+ypyr = []
+
+for i in range(len(latNum)):
+    if desert[i] == "SON":
+        xson.append(longNum[i])
+        yson.append(latNum[i])
+        cson.append(county[i])
+    elif desert[i] == "CHI":
+        xchi.append(longNum[i])
+        ychi.append(latNum[i])
+        cchi.append(county[i])
+    elif desert[i] == "OUT":
+        xout.append(longNum[i])
+        yout.append(latNum[i])
+        cout.append(county[i])
+    elif desert[i] == "PYRR":
+        xpyr.append(longNum[i])
+        ypyr.append(latNum[i])
+
+xsonjit = []
+ysonjit = []
+
+xchijit = []
+ychijit = []
+xoutjit = []
+
+youtjit = []
+
+## version with counties
+for i in range(len(xson)):
+    if xson[i] not in xsonjit:
+        xsonjit.append(xson[i])
+        ysonjit.append(yson[i])
+    else:
+        xsonjit.append(xson[i]+random.uniform(0.2,0.5))
+        ysonjit.append(yson[i]+random.uniform(0.2,0.5))
+
+for i in range(len(xchi)):
+    if xchi[i] not in xchijit:
+        xchijit.append(xchi[i])
+        ychijit.append(ychi[i])
+    else:
+        xchijit.append(xchi[i]-random.uniform(0.2,0.5))
+        ychijit.append(ychi[i]-random.uniform(0.2,0.5))
+
+for i in range(len(xout)):
+    if xout[i] not in xoutjit:
+        xoutjit.append(xout[i])
+        youtjit.append(yout[i])
+    else:
+        xoutjit.append(xout[i]+random.uniform(0.2,0.5))
+        youtjit.append(yout[i]+random.uniform(0.2,0.5))
+
+m = Basemap(llcrnrlat=17,urcrnrlat=35.5,llcrnrlon=-113,urcrnrlon=-95,lat_ts=30)
+m.drawcoastlines()
+m.drawstates()
+m.drawcountries()
+m.drawmapboundary(fill_color=(0.5,0.5,0.5))
+m.fillcontinents(color="white")
+
+m.plot(xsonjit,ysonjit,'go',markeredgewidth='1.5',markeredgecolor="black",markerfacecolor=(0,1,0),markersize=10)
+m.plot(xchijit,ychijit,'bs',markeredgewidth='1.5',markeredgecolor="black",markerfacecolor=(0,0,1),markersize=10)
+m.plot(xoutjit,youtjit,'rd',markeredgewidth='1.5',markeredgecolor="black",markerfacecolor=(1,0,0),markersize=10)
+m.plot(float(xpyr[0])+0.2,float(ypyr[0])+0.2,'y^',markeredgewidth='1.5',markeredgecolor="black",markerfacecolor=(1,1,0),markersize=10)
+
+plt.show()
