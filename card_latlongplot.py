@@ -1,7 +1,11 @@
 import csv
+print "csv"
 import matplotlib.pyplot as plt
+print "plt"
 import numpy as np
+print "np"
 from mpl_toolkits.basemap import Basemap
+print "Base"
 
 ## read file
 cardfile = open("C:/Users/Kaiya/Dropbox/Docs for Brian/THESIS/Raw Specimen Data/specimen_latlongs.csv")
